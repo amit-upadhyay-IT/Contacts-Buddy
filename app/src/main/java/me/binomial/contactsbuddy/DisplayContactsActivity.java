@@ -1,6 +1,7 @@
 package me.binomial.contactsbuddy;
 
 import android.Manifest;
+import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
@@ -9,6 +10,9 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.view.Menu;
+import android.view.MenuItem;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import java.util.ArrayList;
@@ -41,6 +45,8 @@ public class DisplayContactsActivity extends AppCompatActivity {
     {
         ArrayList<ContactInfo> contactsList = new ContactsFetcher(this).fetchAll();
 
+        TextView countTV = findViewById(R.id.contactsListCount);
+        countTV.setText("Count: " + contactsList.size());
         RecyclerView contactsView = findViewById(R.id.contactsRecyclerView);
         ContactsRecyclerAdapter adapter = new ContactsRecyclerAdapter(contactsList, this, R.layout.phone_list_item);
         LinearLayoutManager llm = new LinearLayoutManager(this);
@@ -74,5 +80,24 @@ public class DisplayContactsActivity extends AppCompatActivity {
                 return;
             }
         }
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+
+        int id = item.getItemId();
+
+        if (id == R.id.menu_search)
+        {
+            startActivity(new Intent(this, UniqueContactsActivity.class));
+        }
+        return true;
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        // Inflate the menu; this adds items to the action bar if it is present.
+        getMenuInflater().inflate(R.menu.toolbar_corner_menu, menu);
+        return true;
     }
 }

@@ -3,7 +3,6 @@ package me.binomial.contactsbuddy.adapters;
 import android.content.Context;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
-import android.text.Layout;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -42,17 +41,17 @@ public class ContactsRecyclerAdapter extends RecyclerView.Adapter<ContactsViewHo
         ContactInfo contactInfo = contactsList.get(i);
         holder.personName.setText(contactInfo.getPersonName());
         // if there are multiple numbers
-        String numbers = "";
+        StringBuilder numbers = new StringBuilder();
         ArrayList<PhoneInfo> numberList = contactInfo.getPhoneNumbers();
         for (PhoneInfo phoneInfo: numberList)
-             numbers += ":" + phoneInfo.getNumber();
-        holder.personNumbers.setText(numbers);
+             numbers.append(":").append(phoneInfo.getNumber());
+        holder.personNumbers.setText(numbers.toString());
         // there might be more than one email of the person
-        String emails = "";
+        StringBuilder emails = new StringBuilder();
         ArrayList<EmailInfo> emailList = contactInfo.getEmailAddresses();
         for (EmailInfo emailInfo: emailList)
-            emails += ":" + emailInfo.getAddress();
-        holder.personEmails.setText(emails);
+            emails.append(":").append(emailInfo.getAddress());
+        holder.personEmails.setText(emails.toString());
     }
 
     @Override
