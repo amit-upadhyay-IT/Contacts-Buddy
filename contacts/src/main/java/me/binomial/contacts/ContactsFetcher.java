@@ -44,14 +44,13 @@ public class ContactsFetcher {
             int idIndex = cursor.getColumnIndex(ContactsContract.Contacts._ID);
             int nameIndex = cursor.getColumnIndex(ContactsContract.Contacts.DISPLAY_NAME);
 
-            while (cursor.moveToNext())
-            {
+            do {
                 String contactId = cursor.getString(idIndex);
                 String contactDisplayName = cursor.getString(nameIndex);
                 ContactInfo contact = new ContactInfo(contactId, contactDisplayName);
                 contactsMap.put(contactId, contact);
                 listContacts.add(contact);
-            }
+            } while (cursor.moveToNext());
         }
 
         cursor.close();
