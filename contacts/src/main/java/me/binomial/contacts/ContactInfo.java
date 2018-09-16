@@ -20,11 +20,11 @@ public class ContactInfo implements Parcelable {
     public ContactInfo() {
     }
 
-    public ContactInfo(String id, String personName, ArrayList<PhoneInfo> phoneNumbers, ArrayList<EmailInfo> emailAddresses) {
+    public ContactInfo(String id, String personName) {
         this.id = id;
         this.personName = personName;
-        this.phoneNumbers = phoneNumbers;
-        this.emailAddresses = emailAddresses;
+        this.phoneNumbers = new ArrayList<PhoneInfo>();
+        this.emailAddresses = new ArrayList<EmailInfo>();
     }
 
     public String getId() {
