@@ -55,6 +55,7 @@ public class ContactsFetcher {
 
         cursor.close();
 
+
         matchContactNumbers(contactsMap);
         matchContactEmails(contactsMap);
 
@@ -87,6 +88,7 @@ public class ContactsFetcher {
                 final String contactId = phone.getString(contactIdColumnIndex);
                 ContactInfo contact = contactsMap.get(contactId);
                 if (contact == null) {
+                    phone.moveToNext();
                     continue;
                 }
                 final int type = phone.getInt(contactTypeColumnIndex);

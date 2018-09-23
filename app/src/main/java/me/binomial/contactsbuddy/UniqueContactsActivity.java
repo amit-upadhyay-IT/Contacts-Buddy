@@ -54,10 +54,9 @@ public class UniqueContactsActivity extends AppCompatActivity {
 
     /*
     Algo:
-        - Maintain a HashMap<ArrayList<PhoneInfo.getPhoneNumber()>, ContactInfo>
+        - Maintain a HashMap<ArrayList<String>, ContactInfo>
         - Maintain a ArrayList<ContactInfo> for unique contacts list
-        - Add the ContactInfo object in unique contact list + HashMap if it's numbers are not already present in the HashMap, Else add in the HashMap only
-
+        - Add the ContactInfo object in unique contact list + HashMap if it's numbers are not already present in the HashMap
         NOTE: While inserting the contactInfo object in list, make sure you are comparing the core value of the Numbers i.e. removing preceding '0' and '+91'
      */
 
