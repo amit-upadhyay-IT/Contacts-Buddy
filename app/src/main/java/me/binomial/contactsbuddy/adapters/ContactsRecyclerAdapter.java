@@ -44,13 +44,13 @@ public class ContactsRecyclerAdapter extends RecyclerView.Adapter<ContactsViewHo
         StringBuilder numbers = new StringBuilder();
         ArrayList<PhoneInfo> numberList = contactInfo.getPhoneNumbers();
         for (PhoneInfo phoneInfo: numberList)
-             numbers.append(":").append(phoneInfo.getNumber());
+             numbers.append(":").append(phoneInfo.getNumber()).append("|").append(phoneInfo.getType());
         holder.personNumbers.setText(numbers.toString());
         // there might be more than one email of the person
         StringBuilder emails = new StringBuilder();
         ArrayList<EmailInfo> emailList = contactInfo.getEmailAddresses();
         for (EmailInfo emailInfo: emailList)
-            emails.append(":").append(emailInfo.getAddress());
+            emails.append(":").append(emailInfo.getAddress()).append("|").append(emailInfo.getType());
         holder.personEmails.setText(emails.toString());
     }
 
