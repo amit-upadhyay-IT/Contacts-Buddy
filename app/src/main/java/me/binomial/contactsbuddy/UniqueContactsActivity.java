@@ -39,7 +39,7 @@ public class UniqueContactsActivity extends AppCompatActivity {
         Set<ContactInfo> set = new LinkedHashSet<>(contactsList);
         ArrayList<ContactInfo> uniqueContactList = new ArrayList<>(set);
 
-        ArrayList<ContactInfo> testUniqueList = getUniqueContacts(contactsList);
+        ArrayList<ContactInfo> testUniqueList = getUniqueContactsBasedOnNumbers(contactsList);
 
         TextView countView = findViewById(R.id.uniqueContactsCount);
         countView.setText(new StringBuilder().append("Count: ").append(testUniqueList.size()).toString());
@@ -51,43 +51,84 @@ public class UniqueContactsActivity extends AppCompatActivity {
         contactsView.setAdapter(adapter);
     }
 
-    private ArrayList<ContactInfo> getUniqueContacts(ArrayList<ContactInfo> contactsList)
-    {
-        // maintain a hashmap of numbers and a uniqueContactList
-        // Add contact in the hashmap if the number isn't already present in the hashmap, else don't add
 
-        HashMap<ArrayList<PhoneInfo>, ContactInfo> map = new HashMap<>();
+    /*
+    Algo:
+        - Maintain a HashMap<ArrayList<PhoneInfo.getPhoneNumber()>, ContactInfo>
+        - Maintain a ArrayList<ContactInfo> for unique contacts list
+        - Add the ContactInfo object in unique contact list + HashMap if it's numbers are not already present in the HashMap, Else add in the HashMap only
+
+        NOTE: While inserting the contactInfo object in list, make sure you are comparing the core value of the Numbers i.e. removing preceding '0' and '+91'
+     */
+
+    private ArrayList<ContactInfo> getUniqueContactsBasedOnNumbers(ArrayList<ContactInfo> contactsList)
+    {
+        HashMap<ArrayList<String>, ContactInfo> map = new HashMap<>();
         ArrayList<ContactInfo> uniqueContactList = new ArrayList<>();
 
-        for (ContactInfo contactInfo: contactsList)
+        for (ContactInfo contact: contactsList)
         {
             // get list of numbers
-            ArrayList<PhoneInfo> numbersList = contactInfo.getPhoneNumbers();
-            if (map.get(contactInfo.getPhoneNumbers()) == null)
+            ArrayList<PhoneInfo> numbers = contact.getPhoneNumbers();
+            // process this list of numbers and get numbers without preceding '0' or '+91'
+            ArrayList<String> uniqueBaseNumberList = getBaseNumbersFromList(numbers);
+
+            if (map.get(uniqueBaseNumberList) == null)
             {
                 // number array wasn't present so, adding them in map as well as in the list
-                map.put(contactInfo.getPhoneNumbers(), contactInfo);
-                uniqueContactList.add(contactInfo);
-            }
-            else
-            {
-                map.put(contactInfo.getPhoneNumbers(), contactInfo);
+                map.put(uniqueBaseNumberList, contact);
+                uniqueContactList.add(contact);
             }
         }
         return uniqueContactList;
     }
 
-    // the number list of a contact may have multiple same numbers with diff in +91 or 0 appended
-    private ArrayList<PhoneInfo> getUniqueNumbers(ArrayList<PhoneInfo> numbersList)
+    /*
+    Algo:
+        - Construct a new ArrayList<String> for storing uniqueBaseNumbers
+        - Construct a HashMap<String, Boolean> for storing the numbers in it (it will store the unique numbers)
+        - Read the numbers list and get the base number:
+            - if base number isn't already present in the above HashMap, then insert it in map and the uniqueBaseNumbers list
+            - Else, just insert in the
+     */
+    private ArrayList<String> getBaseNumbersFromList(ArrayList<PhoneInfo> numbers)
     {
-        // construct a dictionary of string, boolean
-        HashMap<String, Boolean> uniqueNums = new HashMap<>();
+        ArrayList<String> uniqueBaseNumbers = new ArrayList<>();
+        HashMap<String, Boolean> map  = new HashMap<>();
 
-        for (int i = 0; i < numbersList.size(); ++i)
+        for (int i = 0; i < numbers.size(); ++i)
         {
-            String num = numbersList.get(i).getNumber();
+            String baseNumber = getBaseNumber(numbers.get(i).getNumber());
+            if (map.get(baseNumber) == null)
+            {
+                map.put(baseNumber, true);
+                uniqueBaseNumbers.add(baseNumber);
+            }
         }
+        return uniqueBaseNumbers;
+    }
 
-        return null;
+    /*
+    Algo:
+        - Check digits in number
+        - If digit is greater than 10, then only go for extracting the base number
+            - Check the substring (0, 3) if it's equal to '+91':
+                - return the base number
+            - Check the substring (0, 1) if it's equal to '0':
+                - return the base number
+     */
+    private String getBaseNumber(String number)
+    {
+        if (number.length() == 10)
+            return number;
+        else
+        {
+            if (number.substring(0, 3).equals("+91") && number.length() == 13)
+                return number.substring(3, number.length()-3);
+            if (number.substring(0, 1).equals("0") && number.length() == 11)
+                return number.substring(1, number.length()-1);
+            else
+                return null;
+        }
     }
 }
